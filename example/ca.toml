@@ -1,0 +1,17 @@
+[metadata]
+isca = true
+
+
+[metadata.expiration]
+years = 10
+months = 0
+days = 0
+
+[subject]
+street-address = "address"
+postal-code = "00-000"
+common-name = "First Root CA Example"
+organization = ["Example Company"]
+country = ["US"]
+province = ["California"]
+locality = ["City"]
