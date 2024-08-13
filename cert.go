@@ -24,11 +24,7 @@ func CreateCertificate(conf CertConfig) ([]byte, []byte, error) {
 	caPrivateKey := privateKey
 
 	template, parent := ca, ca
-	if !ca.IsCA {
-		if conf.Metadata.CaCertPath == "" || conf.Metadata.CaKeyPath == "" {
-			return nil, nil, fmt.Errorf("leaf cert need CA cert and key specified in config")
-		}
-
+	if conf.Metadata.CaCertPath != "" && conf.Metadata.CaKeyPath != "" {
 		cert, err := os.ReadFile(conf.Metadata.CaCertPath)
 		if err != nil {
 			return nil, nil, fmt.Errorf("cannot read cert: %w", err)
@@ -43,6 +39,8 @@ func CreateCertificate(conf CertConfig) ([]byte, []byte, error) {
 		if err != nil {
 			return nil, nil, fmt.Errorf("cannot convert cert / key files to objects: %w", err)
 		}
+	} else if !conf.Metadata.IsCa {
+		return nil, nil, fmt.Errorf("leaf cert need CA cert and key specified in config")
 	}
 
 	caBytes, err := x509.CreateCertificate(rand.Reader, template, parent, &privateKey.PublicKey, caPrivateKey)
